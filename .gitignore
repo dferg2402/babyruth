@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Course materials (kept locally, not part of the team repository)
+course-requirements/
+part3-eligibility-check.zip
+
+# Canvas upload bundle (submitted on Canvas, not through the repository)
+submissions/ai-project-part-3/eventhub-babyruth.zip
+
+# Design notes (kept locally, not part of the submission)
+docs/
+
+# Structurizr Lite writes these next to workspace.dsl when it opens the folder
+.structurizr/
+workspace.json
+
+# Diagram export tooling
+scripts/node_modules/
+scripts/package-lock.json
+
+# Grading
+grading/

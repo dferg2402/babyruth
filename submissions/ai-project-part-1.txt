@@ -1,0 +1,407 @@
+# Initial AI-generated requirements from the transcripts:
+
+https://claude.ai/share/1b4a1ee1-4686-4cc9-b132-aa5f442920f3
+
+### 1. Registration & Authentication
+
+**REQ-01** The system shall allow any user to register an account using a full name, email address, and password.
+
+**REQ-02** When a user submits a registration form, the system shall store the user's password as a cryptographic hash and shall never store the password in plaintext.
+
+**REQ-03** When a user logs in, the system shall create an authenticated session for that user.
+
+**REQ-04** While a user session is active and idle beyond the configured session timeout period, the system shall automatically invalidate the session and require the user to log in again.
+
+**REQ-05** When a user registers with an email address whose domain is @usf.edu, the system shall flag that account as eligible for the USF student discount.
+
+**REQ-06 *(Open - pending resolution)*** When a user registers, the system shall \<verify the email address via a confirmation link OR accept the address as-is> - *the email verification requirement is unresolved and must be decided before implementation.*
+
+---
+
+### 2. Browsing & Searching Events
+
+**REQ-07** The system shall display a list of all upcoming events available on the platform.
+
+**REQ-08** The system shall allow users to search for events by artist name.
+
+**REQ-09** The system shall allow users to search for events by venue name.
+
+**REQ-10** When a user clicks once on an event card in the event list, the system shall navigate the user to that event's detail page.
+
+**REQ-11** When a user double-clicks an event card in the event list, the system shall immediately initiate the purchase of one ticket for that event using the user's saved settings, without navigating to the event detail page first.
+
+**REQ-12** While a user is not logged in and attempts to double-click an event card, the system shall prompt the user to log in before proceeding with the purchase.
+
+---
+
+### 3. Event Detail & Availability
+
+**REQ-13** The system shall display a detail page for each event showing, at minimum: event name, artist, venue, date and time, ticket price(s), and current ticket availability count.
+
+**REQ-14** When a user loads or refreshes an event detail page, the system shall display the current number of tickets remaining for that event at the time of page load.
+
+---
+
+### 4. Purchase Flow
+
+**REQ-15** While a user is not authenticated, the system shall require the user to log in before allowing ticket checkout to proceed.
+
+**REQ-16** The system shall allow a logged-in user to select a quantity of tickets and a preferred currency before completing a purchase.
+
+**REQ-17** The system shall support a defined list of currencies for purchase transactions. *(The specific list of supported currencies is an open item to be finalized.)*
+
+**REQ-18** The system shall apply static exchange rates from a centrally maintained configuration file when converting ticket prices into the buyer's selected currency.
+
+**REQ-19** When a user submits a purchase, the system shall validate all input fields - including ticket quantity and selected currency - on the server side before processing the transaction.
+
+**REQ-20** If a user submits a ticket quantity of zero, a negative number, or a value exceeding the per-order limit, the system shall reject the request and return a specific error message indicating an invalid quantity.
+
+**REQ-21** If a user submits a currency value not present in the system's supported currency list, the system shall reject the request and return a specific error message indicating an unsupported currency.
+
+**REQ-22 *(Open - pending resolution)*** The system shall enforce a maximum ticket quantity per account per event of \<limit TBD> - *the purchase limit per order/account is an open item; the applicable cap and any exceptions for student organizations are unresolved.*
+
+**REQ-23** If a user attempts to purchase tickets for a sold-out event, the system shall reject the transaction and display a "Sold Out" message distinct from all other error messages.
+
+---
+
+### 5. USF Student Discount
+
+**REQ-24** While a logged-in user's account is flagged as USF-eligible (per REQ-05), the system shall apply the USF student discount to the ticket price at checkout.
+
+**REQ-25 *(Open - pending resolution)*** The system shall apply the USF student discount to \<USF-hosted events only OR all events on the platform> - *the scope of the discount across the platform is an unresolved business dispute.*
+
+**REQ-26 *(Open - pending resolution)*** The USF student discount shall reduce the ticket price by \<percentage or fixed amount TBD> - *the discount amount has not yet been provided and must be supplied before implementation.*
+
+**REQ-27** When a USF student discount is applied and the user has selected a non-USD currency, the system shall apply the discount to the base price before performing currency conversion, and shall round the final converted price according to the rules of the target currency. *(The precise rounding rule is an open item.)*
+
+---
+
+### 6. Confirmation & Order History
+
+**REQ-28** When a purchase is completed successfully, the system shall display an on-screen order confirmation showing: event name, quantity purchased, currency used, exchange rate applied, and total amount charged.
+
+**REQ-29** The system shall store each completed order and associate it with the purchasing user's account.
+
+**REQ-30** While a user is authenticated, the system shall provide an order history page listing all past orders for that account.
+
+**REQ-31** When a user selects a past order from the order history page, the system shall display the full order confirmation details for that order.
+
+**REQ-32 *(Open - pending resolution)*** The system shall \<send OR not send> an email confirmation to the user upon successful purchase - *email confirmation delivery is an open item deferred for later discussion.*
+
+---
+
+### 7. Logging & Auditability
+
+**REQ-33** The system shall log every purchase attempt - whether successful or failed - recording the timestamp, user account, event, ticket quantity, selected currency, and outcome.
+
+**REQ-34** When a purchase attempt fails, the system shall log the specific reason for failure as part of the purchase attempt record.
+
+---
+
+### 8. Security
+
+**REQ-35** The system shall never transmit or store user passwords in plaintext at any point in the application.
+
+**REQ-36** While a user is not authenticated, the system shall deny access to the checkout page and the order history page.
+
+**REQ-37** The system shall validate all quantity inputs on the server side, rejecting values that are zero, negative, non-integer, or exceed defined system limits.
+
+**REQ-38** The system shall validate all currency inputs on the server side against the system's supported currency list, rejecting any currency identifier not present on that list.
+
+---
+
+### 9. Platform Scope & Responsiveness
+
+**REQ-39** The system shall be accessible to any user worldwide without geographic restriction.
+
+**REQ-40** The system shall render correctly on mobile-sized screens via a responsive web design, without requiring a native mobile application.
+
+---
+
+### Open Items Summary
+
+The following items were explicitly deferred in the kickoff meeting and **must be resolved before their associated requirements can be finalized:**
+
+| # | Open Item |
+|---|-----------|
+| OI-1 | Whether email address verification (confirmation link) is required at registration |
+| OI-2 | Whether the USF discount applies to all platform events or only USF-hosted events |
+| OI-3 | The exact USF student discount amount (percentage or fixed value) |
+| OI-4 | Whether tickets are held/reserved during checkout, and for how long |
+| OI-5 | The maximum purchase quantity per order / per account per event, and whether student org exceptions exist |
+| OI-6 | The finalized list of supported currencies |
+| OI-7 | Rounding rule for discounted prices converted to currencies without sub-unit denominations (e.g. JPY) |
+
+# Issues found with AI generated requirements
+
+There were many issues with the generated requirements given that the model used was SOTA (Claude Sonnet 4.6 Medium thinking):
+
+Issue 1 - Hallucinated Requirement
+
+Affected Requirement: REQ-11
+
+What it says: When a user double-clicks an event card, the system shall immediately initiate the purchase of one ticket using the user's saved settings.
+
+Why it's wrong: The transcript says the double-click should instantly buy one ticket, but nowhere does it define what "saved settings" are, or mention that users can save payment settings at all. The AI invented the concept of "saved settings". The transcript's version one has a simulated/pretend payment step with no real payment company involved, so there are no payment settings to save in the first place.
+
+How to fix it: Remove "saved settings." The requirement should say the system initiates purchase of one ticket using the user's account and the system's default purchase flow (quantity = 1, user's previously selected or default currency).
+
+Issue 2 - Hallucinated Requirement
+
+Affected Requirement: REQ-12
+
+What it says: While a user is not logged in and attempts to double-click an event card, the system shall prompt the user to log in before proceeding.
+
+Why it's wrong: This was never discussed in the transcript. The meeting only established that checkout and order history require login (from Kenji). The double-click scenario was raised by Marcus as a UI convenience idea, and nobody discussed what happens if a non-logged-in user attempts it.
+
+How to fix it: This is a legitimate missing exception that should exist, but it's technically hallucinated because it was never stated. It should be flagged as an inferred requirement, not a stated one, or converted to an open item pending team confirmation. Per Kenji's actual stated rule: checkout requires login, so this should be derived from REQ-15 rather than stated independently for double-click.
+
+Issue 3 - Missing Requirement: Search by Date
+
+Affected Requirement: No requirement covers this.
+
+Why it's wrong: In the transcript, Marcus explicitly asks "Search by artist. What about by venue or date?", and while Darnell only confirmed venue, the date search was raised and never formally ruled out. Also, Adaeze's summary says "browse and search events by artist and venue", in which date was dropped without resolution. However, the event detail page (REQ-13) shows date/time, so filtering by date is a natural companion feature that was at minimum discussed.
+
+How to fix it: Add a note that date-based search was raised but not confirmed. Either add it as an open item or add a requirement with an open-item tag.
+
+Issue 4 - Missing Requirement: The Complete-Purchase-in-Under-Two-Minutes Goal
+
+Affected Requirement: None.
+
+Why it's wrong: Darnell explicitly stated: "I need one place where a student can see what's coming up, buy a ticket, and be done in under two minutes." This is a performance/UX requirement that the AI completely ignored. It's a non-functional requirement, but it was directly stated by the customer as a core goal.
+
+How to fix it: Add a non-functional requirement stating the system shall enable a logged-in user to complete a ticket purchase within two minutes from the event browsing page.
+
+Issue 5 - Missing Requirement: Screenshot Prevention on Confirmation Page
+
+Affected Requirement: None.
+
+Why it's wrong: Darnell explicitly requested: "make it so students can't screenshot the confirmation page." Marcus confirmed: "Noted. No-screenshot on the confirmation page." The AI dropped this entirely, even though it was explicitly agreed upon during the meeting.
+
+How to fix it: Add a requirement that the confirmation page shall implement browser-level screenshot prevention.
+
+Issue 6 - Missing Requirement: Specific Error Messages for Distinct Failure Types
+
+Affected Requirement: REQ-20, REQ-21, REQ-23 partially cover this, but the broader requirement is missing.
+
+Why it's wrong: Thuy specifically stated: "I want failures to be specific. 'Sold out' is a different message than 'invalid quantity' which is different from 'unsupported currency.'" The AI captured individual cases but never wrote a general requirement that each failure type must produce a distinct, named error message. REQ-20, REQ-21, and REQ-23 cover only three failure types. There is no requirement for what message appears when, for example, a user is not logged in and tries to check out.
+
+How to fix it: Add a general requirement that for every failure condition in the purchase flow, the system shall display a distinct error message that identifies the specific cause of failure.
+
+Issue 7 - Missing Requirement: Event Listing Must Show Upcoming Events (Not All Events)
+
+Affected Requirement: REQ-07
+
+What it says: "The system shall display a list of all upcoming events available on the platform."
+
+Why it's wrong: This is actually correct, but there is no requirement about what happens to past events; Are they removed from the listing? Hidden? Archived? Darnell said students need to see "what's coming up", implying the browse view is future-facing. The AI never addressed what happens to past or sold-out events in the listing.
+
+How to fix it: Add a requirement that past events (events whose date has passed) shall not appear in the main event listing. Separately, add a requirement about how sold-out events are displayed (shown with a "Sold Out" badge vs. hidden entirely - this may be an open item).
+
+Issue 8 - Ambiguous Language in REQ-14
+
+Affected Requirement: REQ-14
+
+What it says: "When a user loads or refreshes an event detail page, the system shall display the current number of tickets remaining at the time of page load."
+
+Why it's wrong: The word "current" is ambiguous. The transcript had a whole debate about this: Darnell said "live means live, when I look at my phone the number is right," but Thuy pointed out "the number can be right when the page loads and outdated four seconds later." Adaeze deferred this to be "spec'd precisely later." The AI resolved this ambiguity by choosing "at the time of page load", but that's an editorial decision the AI has no authority to make. This is an open item.
+
+How to fix it: Reclassify as an open item. The requirement should be flagged as: "the ticket availability update mechanism (on-page-load only vs. real-time auto-updating) is an unresolved open item." It should not state a specific resolution.
+
+Issue 9 - Ambiguous Language in REQ-22
+
+Affected Requirement: REQ-22
+
+What it says: "The system shall enforce a maximum ticket quantity per account per event of <limit TBD>."
+
+Why it's wrong: The transcript shows a direct conflict between Marcus and Kenji on this point. Marcus said the cap is "a per-order thing, no single order above the limit." Kenji said "Per account, per event, that's what keeps a scalper from placing ten orders" and Marcus replied "Sure, sure." These are actually two different rules: a per-order cap AND a per-account-per-event cap. The AI collapsed them into one requirement and left the scope ambiguous.
+
+How to fix it: Split into two requirements: (1) a per-order maximum quantity, and (2) a per-account-per-event cumulative maximum, both with TBD values.
+
+Issue 10 - Incorrect Business Logic in REQ-24 / REQ-25
+
+Affected Requirement: REQ-24, REQ-25
+
+What REQ-24 says: "While a logged-in user's account is flagged as USF-eligible, the system shall apply the USF student discount to the ticket price at checkout."
+
+Why it's wrong: REQ-25 correctly marks the scope of the discount as an open item, but REQ-24 implies the discount always applies, regardless of which events. The two requirements contradict each other: REQ-24 says the discount applies at checkout universally, while REQ-25 says the scope is unresolved. If the final decision is "USF-hosted events only," REQ-24 as written would be incorrect.
+
+How to fix it: REQ-24 should be conditional on the resolution of REQ-25. It should read: "When a logged-in user's account is flagged as USF-eligible AND the event qualifies for the USF discount, the system shall apply the USF student discount."
+
+Issue 11 - Missing Business Rule: Double-Click Requires Saved/Default Currency
+
+Affected Requirement: REQ-11
+
+Why it's wrong: The double-click feature is supposed to be frictionless or "one gesture and they're done." But the purchase flow (REQ-16) requires the user to select a currency. If double-click bypasses the purchase flow, what currency is used? The transcript never resolved this, and the AI didn't flag it as an open item. It just said "saved settings". This is a missing business rule.
+
+How to fix it: Flag as an open item: what currency and quantity are assumed when a user double-clicks, given the purchase flow is bypassed?
+
+Issue 12 - Duplicate / Redundant Requirements
+
+Affected Requirements: REQ-02 and REQ-35
+
+What they say:
+
+REQ-02: "the system shall store the user's password as a cryptographic hash and shall never store the password in plaintext."
+REQ-35: "The system shall never transmit or store user passwords in plaintext at any point in the application."
+
+Why it's wrong: These two requirements cover the same rule. REQ-35 adds "transmit" which is a useful addition, but the "never store in plaintext" clause is stated twice. Redundant requirements create maintenance problems, if one is updated, the other may be missed, creating a conflict.
+
+How to fix it: Merge into a single requirement: "The system shall hash all user passwords before storage and shall never store or transmit passwords in plaintext at any point."
+
+Issue 13 - Missing Requirement: Order History Requires Authentication
+
+Affected Requirement: REQ-36 covers this for checkout and order history access. However, REQ-30 states "While a user is authenticated, the system shall provide an order history page".
+
+Actually missing: There is no requirement for what happens when an unauthenticated user directly navigates to the order history URL. REQ-36 says access is denied, but there's no requirement specifying the system must redirect them to login rather than showing an error page.
+
+How to fix it: Add: "When an unauthenticated user attempts to access the order history page or checkout page, the system shall redirect the user to the login page."
+
+Issue 14 - Non-Testable Requirement in REQ-39
+
+Affected Requirement: REQ-39
+
+What it says: "The system shall be accessible to any user worldwide without geographic restriction."
+
+Why it's wrong: "Accessible to any user worldwide" is not testable as written. There's no measurable acceptance criterion. This came from Adaeze's framing statement: "EventHub is a public platform. Anyone in the world can register and buy tickets."
+
+How to fix it: Rewrite as: "The system shall not implement any IP geolocation blocking, country-based access restrictions, or region locks on user registration or ticket purchasing."
+
+Issue 15 - Missing Open Item: Rounding Rule Not Fully Specified in REQ-27
+
+Affected Requirement: REQ-27
+
+What it says: "...shall round the final converted price according to the rules of the target currency. (The precise rounding rule is an open item.)"
+
+Why it's wrong: Kenji raised two separate sub-questions: (1) does the discount apply before or after currency conversion, and (2) where does rounding happen? REQ-27 answers question 1 correctly (discount before conversion), but that answer was never confirmed in the transcript. Marcus said "That's a good question" with no resolution. The AI chose an answer (discount first, then convert) without authority to do so.
+
+How to fix it: The order of operations (discount then convert, vs. convert then discount) should also be flagged as an open item, not silently resolved.
+
+# Corrected Software Requirements with EARS Format
+
+1. Registration & Authentication
+
+REQ-01 The system shall allow any user to register an account by providing a full name, a valid email address, and a password.
+
+REQ-02 When a user submits a registration form, the system shall hash the user's password using a cryptographic hashing algorithm and shall never store or transmit the password in plaintext at any point.
+
+REQ-03 When a user submits valid login credentials, the system shall create an authenticated session for that user.
+
+REQ-04 While a user session has been idle beyond the configured session timeout period, the system shall automatically invalidate the session and require the user to log in again.
+
+REQ-05 When a user registers with an email address whose domain is @usf.edu, the system shall flag that account as eligible for the USF student discount.
+
+REQ-06 (Open - OI-1: Email verification method unresolved) When a user registers, the system shall "send a confirmation link to the provided email address and require the user to click it before the account is activated OR accept the provided email address without verification," the email verification method must be decided before implementation.
+
+2. Browsing & Searching Events
+
+REQ-07 The system shall display a list of all events whose date and time have not yet passed.
+
+REQ-08 The system shall not display events whose scheduled date and time have already passed in the main event listing.
+
+REQ-09 The system shall allow any user to search for events by artist name.
+
+REQ-10 The system shall allow any user to search for events by venue name.
+
+REQ-11 When a user performs a single click on an event card in the event list, the system shall navigate the user to that event's detail page.
+
+REQ-12 When a logged-in user performs a double-click on an event card in the event list, the system shall immediately initiate the purchase of one ticket for that event, bypassing the event detail page. (Open - OI-8: What currency and quantity defaults apply during a double-click purchase, given the standard purchase flow is bypassed? This must be resolved before REQ-12 can be fully implemented.)
+
+REQ-13 While a user is not authenticated and attempts a double-click purchase on an event card, the system shall redirect the user to the login page before proceeding.
+
+3. Event Detail & Availability
+
+REQ-14 The system shall display a detail page for each event showing, at minimum: event name, artist name, venue name, event date and time, ticket price, and current ticket availability count.
+
+REQ-15 When a user loads or refreshes an event detail page, the system shall display the number of tickets remaining for that event as of the time of that page load. (Open - OI-9: Whether ticket availability must auto-update in real time without a page refresh, or whether on-load accuracy is sufficient, was not resolved in the kickoff meeting and must be specified before implementation.)
+
+4. Purchase Flow
+
+REQ-16 While a user is not authenticated, the system shall deny access to the checkout page and redirect the user to the login page.
+
+REQ-17 The system shall allow a logged-in user to select a quantity of tickets and a preferred currency before submitting a purchase.
+
+REQ-18 The system shall support a defined, finalized list of currencies for all purchase transactions. (Open - OI-6: The specific list of supported currencies has not been finalized and must be provided before implementation.)
+
+REQ-19 The system shall apply static exchange rates stored in a centrally maintained configuration file when converting ticket prices into the buyer's selected currency.
+
+REQ-20 When a user submits a purchase, the system shall validate all input fields, including ticket quantity and selected currency, on the server side before processing the transaction.
+
+REQ-21 When a user submits a ticket quantity of zero, a negative number, or a non-integer value, the system shall reject the request and return the error message: "Invalid quantity."
+
+REQ-22 When a user submits a currency value not present in the system's supported currency list, the system shall reject the request and return the error message: "Unsupported currency."
+
+REQ-23 When a user attempts to purchase tickets for an event with zero tickets remaining, the system shall reject the transaction and display the error message: "Sold Out," distinct from all other error messages.
+
+REQ-24 (Open - OI-5a: Per-order quantity cap value unresolved) When a single order's ticket quantity exceeds the maximum per-order limit of <limit TBD>, the system shall reject the request and return the error message: "Invalid quantity."
+
+REQ-25 (Open - OI-5b: Per-account-per-event cap value and org exceptions unresolved) When a user's total tickets purchased for a single event across all orders reaches the maximum per-account-per-event limit of <limit TBD>, the system shall reject any further purchase attempts for that event by that account and return the error message: "Purchase limit reached for this event."
+
+REQ-26 When any purchase attempt fails, the system shall display a specific error message that identifies the distinct cause of failure, and no two different failure conditions shall produce the same error message.
+
+REQ-27 A logged-in user shall be able to complete a ticket purchase within two minutes of beginning the purchase flow from the event listing page.
+
+5. USF Student Discount
+
+REQ-28 (Open - OI-2: Discount scope unresolved; REQ-28 is conditional on its resolution) Where the USF student discount applies to "all events on the platform OR only events hosted by USF," the system shall apply the discount to the ticket price at checkout when the purchasing user's account is flagged as USF-eligible.
+
+REQ-29 (Open - OI-3: Discount amount unresolved) Where a USF student discount is applied, the system shall reduce the base ticket price by "percentage or fixed amount TBD" before any currency conversion or rounding is performed. (Open - OI-3: The exact discount amount has not been provided and must be supplied before implementation.)
+
+REQ-30 (Open - OI-7: Discount/conversion order and rounding rule unresolved) When a USF student discount is applied and the user has selected a non-USD currency, the system shall "apply the discount to the base USD price first, then convert and round OR convert first, then apply the discount and round" according to "rounding rule TBD for currencies without sub-unit denominations such as JPY". (Open - OI-7: The order of operations for discount and currency conversion, and the rounding rule for currencies without cents, were raised but not resolved in the kickoff meeting.)
+
+6. Confirmation & Order History
+
+REQ-31 When a purchase is completed successfully, the system shall display an on-screen order confirmation page showing: event name, quantity purchased, currency used, exchange rate applied, and total amount charged.
+
+REQ-32 When an order confirmation page is rendered, the system shall prevent the user from capturing a screenshot of that page using browser-level screenshot prevention mechanisms.
+
+REQ-33 The system shall store each completed order and associate it permanently with the purchasing user's account.
+
+REQ-34 While a user is authenticated, the system shall provide an order history page listing all past orders associated with that account.
+
+REQ-35 While a user is not authenticated and attempts to access the order history page, the system shall redirect the user to the login page.
+
+REQ-36 When a user selects a past order from the order history page, the system shall display the full order confirmation details for that order, including: event name, quantity purchased, currency used, exchange rate applied, and total amount charged.
+
+REQ-37 (Open - OI-10: Email confirmation deferred) When a purchase is completed successfully, the system shall "send an email confirmation to the user's registered email address OR not send an email confirmation" - email confirmation delivery was deferred and must be resolved before implementation.
+
+7. Logging & Auditability
+
+REQ-38 The system shall log every purchase attempt, whether successful or failed, recording: timestamp, user account identifier, event identifier, ticket quantity requested, selected currency, and outcome.
+
+REQ-39 When a purchase attempt fails, the system shall log the specific reason for failure as part of the purchase attempt record.
+
+8. Security
+
+REQ-40 The system shall hash all user passwords using a cryptographic algorithm before storage and shall never store or transmit any user password in plaintext.
+
+REQ-41 While a user is not authenticated, the system shall deny access to the checkout page and the order history page and redirect the user to the login page.
+
+REQ-42 The system shall validate all ticket quantity inputs on the server side, rejecting any value that is zero, negative, a non-integer, or exceeds the defined per-order limit.
+
+REQ-43 The system shall validate all currency inputs on the server side against the system's supported currency list and reject any currency identifier not present on that list.
+
+REQ-44 The system shall accept currency selections only from its internally maintained supported currency list and shall never trust or process a currency string supplied directly by the client.
+
+9. Platform Scope & Accessibility
+
+REQ-45 The system shall not implement IP geolocation blocking, country-based access restrictions, or region locks on user registration or ticket purchasing.
+
+REQ-46 The system shall render correctly and be fully functional on mobile-sized screens through a responsive web design, without requiring the user to install a native mobile application.
+
+Open Items Summary
+
+The following items were explicitly deferred in the kickoff meeting and must be resolved before their associated requirements can be finalized.
+
+ID	Open Item	Affects
+OI-1	Whether email address verification via confirmation link is required at registration	REQ-06
+OI-2	Whether the USF student discount applies to all platform events or only USF-hosted events	REQ-28
+OI-3	The exact USF student discount amount (percentage or fixed value)	REQ-29
+OI-4	Whether tickets are held/reserved during checkout, and for how long	(No req yet - pending resolution)
+OI-5a	Maximum ticket quantity per single order	REQ-24
+OI-5b	Maximum ticket quantity per account per event, and whether student org exceptions exist	REQ-25
+OI-6	The finalized list of supported currencies	REQ-18
+OI-7	Order of operations for discount vs. currency conversion, and rounding rule for currencies without sub-unit denominations (e.g., JPY)	REQ-30
+OI-8	What currency and quantity defaults apply when a user double-clicks to purchase	REQ-12
+OI-9	Whether ticket availability must auto-update in real time or on-load accuracy is sufficient	REQ-15
+OI-10	Whether the system sends an email confirmation upon successful purchase	REQ-37
